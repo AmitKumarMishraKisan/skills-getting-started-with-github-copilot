@@ -142,3 +142,65 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+.participants {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  border: 1px solid #eef3ff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.participants h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #1a237e;
+  font-weight: 600;
+}
+
+
+.participants-list {
+  list-style: none; /* hide bullets */
+  margin: 6px 0 0 0;
+  padding: 0;
+  color: #444;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #f0f2ff;
+  font-size: 14px;
+}
+
+.participant-label {
+  word-break: break-word;
+  margin-right: 10px;
+}
+
+.participants-list li.no-participants {
+  font-style: italic;
+  color: #888;
+  padding: 4px 0;
+}
+
+.participants-list li:last-child {
+  border-bottom: none;
+}
+
+.delete-participant {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.delete-participant:hover {
+  background: rgba(198, 40, 40, 0.08);
+}
