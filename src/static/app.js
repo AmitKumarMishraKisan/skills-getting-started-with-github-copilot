@@ -10,15 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
+      // Clear loading message and previous content
       activitiesList.innerHTML = "";
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const spotsLeft = details.max_participants - (details.participants ? details.participants.length : 0);
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
@@ -26,6 +27,40 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
+
+        // Participants section (build with DOM to avoid injection and keep styling flexible)
+        const participantsDiv = document.createElement("div");
+        participantsDiv.className = "participants";
+
+        const participantsHeader = document.createElement("h5");
+        participantsHeader.textContent = "Participants";
+        participantsDiv.appendChild(participantsHeader);
+
+        const ul = document.createElement("ul");
+        ul.className = "participants-list";
+
+        if (details.participants && details.participants.length) {
+          details.participants.forEach((p) => {
+            const li = document.createElement("li");
+            // Make display robust: handle string entries or objects like { name, email }
+            if (typeof p === "string") {
+              li.textContent = p;
+            } else if (p && typeof p === "object") {
+              li.textContent = p.name || p.email || JSON.stringify(p);
+            } else {
+              li.textContent = String(p);
+            }
+            ul.appendChild(li);
+          });
+        } else {
+          const li = document.createElement("li");
+          li.className = "no-participants";
+          li.textContent = "No participants yet";
+          ul.appendChild(li);
+        }
+
+        participantsDiv.appendChild(ul);
+        activityCard.appendChild(participantsDiv);
 
         activitiesList.appendChild(activityCard);
 
@@ -62,6 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+
+        // Refresh activities so the participants panel updates immediately
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
